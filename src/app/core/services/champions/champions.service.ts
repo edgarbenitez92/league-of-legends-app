@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Data } from '../../../shared/interfaces/champions.interface';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Champion, Data } from '../../../shared/interfaces/champions.interface';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AppSettingsService } from '../app-settings/app-settings.service';
@@ -11,19 +11,18 @@ import { SessionService } from '../session/session.service';
   providedIn: 'root',
 })
 export class ChampionsService {
-  apiVersion: string | null;
+  championsRetrieved: BehaviorSubject<Champion[]> = new BehaviorSubject<Champion[]>([]);
 
   constructor(
     private http: HttpClient,
     private appSettings: AppSettingsService,
     private sessionService: SessionService
-  ) {
-    this.apiVersion = this.sessionService.getApiVersion();
-  }
+  ) {}
 
   getChampions(): Observable<any> {
+    const apiVersion = this.sessionService.getApiVersion();
     return this.http
-      .get<any>(`${environment.apiBaseUrl}/${this.apiVersion}/data/en_US/champion.json`)
+      .get<any>(`${environment.apiBaseUrl}/${apiVersion}/data/en_US/champion.json`)
       .pipe(
         pluck('data'),
         map((data) => {
@@ -44,9 +43,10 @@ export class ChampionsService {
   }
 
   getChampionById(id: string): Observable<Data> {
-    let language = this.appSettings.appSettings.api_language;
+    const apiVersion = this.sessionService.getApiVersion();
+    const language = this.appSettings.appSettings.api_language;
     return this.http.get<Data>(
-      `${environment.apiBaseUrl}/${this.apiVersion}/data/${language}/champion/${id}.json`
+      `${environment.apiBaseUrl}/${apiVersion}/data/${language}/champion/${id}.json`
     );
   }
 }
