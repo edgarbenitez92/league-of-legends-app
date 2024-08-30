@@ -6,6 +6,7 @@ import { SnackBarStatesEnum } from 'src/app/shared/enums/snack-bar-states.enum';
 import { Champion } from 'src/app/shared/interfaces/champions.interface';
 import { SnackBarService } from '../../../core/services/snack-bar/snack-bar.service';
 import { finalize } from 'rxjs';
+import { SummonerVersionService } from 'src/app/core/services/summoner-version/summoner-version.service';
 
 @Component({
   selector: 'app-champions-list',
@@ -20,33 +21,47 @@ export class ChampionsListComponent implements OnInit {
     private championsService: ChampionsService,
     private spinner: NgxSpinnerService,
     private snackBarService: SnackBarService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private summonerVersionService: SummonerVersionService
   ) {
     this.isInitView = true;
   }
 
   ngOnInit(): void {
-    this.getChampions();
+    this.champions = this.championsService.championsRetrieved.getValue();
+    this.checkIfRetrieveChampions();
+  }
+
+  checkIfRetrieveChampions(): void {
+    this.summonerVersionService.versionUpdated.subscribe((isUpdated) => {
+      if (isUpdated && !this.champions.length) this.getChampions();
+    });
   }
 
   getChampions() {
     this.spinner.show();
 
-    this.championsService.getChampions()
-      .pipe(finalize(() => {
-        setTimeout(() => {
-          this.spinner.hide()
-        }, 1000);
-      }))
+    this.championsService
+      .getChampions()
+      .pipe(
+        finalize(() => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        })
+      )
       .subscribe({
-      next: (champions: any) => (this.champions = champions),
-      error: () => {
-        this.snackBarService.open(
-          SnackBarStatesEnum.DANGER,
-          this.translateService.instant('ERROR_GET_CHAMPIONS')
-        );
-      }
-    });
+        next: (champions: Champion[]) => {
+          this.champions = champions;
+          this.championsService.championsRetrieved.next(champions);
+        },
+        error: () => {
+          this.snackBarService.open(
+            SnackBarStatesEnum.DANGER,
+            this.translateService.instant('ERROR_GET_CHAMPIONS')
+          );
+        },
+      });
   }
 
   onSelectTypeView(value: boolean): boolean {
