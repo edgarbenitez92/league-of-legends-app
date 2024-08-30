@@ -6,6 +6,7 @@ import { SnackBarStatesEnum } from 'src/app/shared/enums/snack-bar-states.enum';
 import { Champion } from 'src/app/shared/interfaces/champions.interface';
 import { SnackBarService } from '../../../core/services/snack-bar/snack-bar.service';
 import { finalize } from 'rxjs';
+import { SummonerVersionService } from 'src/app/core/services/summoner-version/summoner-version.service';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { SplashChampionComponent } from '../../../shared/components/splash-champion/splash-champion.component';
 import { MiniIconsChampionsComponent } from '../../../shared/components/mini-icons-champions/mini-icons-champions.component';
@@ -43,13 +44,21 @@ export class ChampionsListComponent implements OnInit {
     private championsService: ChampionsService,
     private spinner: NgxSpinnerService,
     private snackBarService: SnackBarService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private summonerVersionService: SummonerVersionService
   ) {
     this.isInitView = true;
   }
 
   ngOnInit(): void {
-    this.getChampions();
+    this.champions = this.championsService.championsRetrieved.getValue();
+    this.checkIfRetrieveChampions();
+  }
+
+  checkIfRetrieveChampions(): void {
+    this.summonerVersionService.versionUpdated.subscribe((isUpdated) => {
+      if (isUpdated && !this.champions.length) this.getChampions();
+    });
   }
 
   getChampions() {
@@ -65,7 +74,10 @@ export class ChampionsListComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (champions: any) => (this.champions = champions),
+        next: (champions: Champion[]) => {
+          this.champions = champions;
+          this.championsService.championsRetrieved.next(champions);
+        },
         error: () => {
           this.snackBarService.open(
             SnackBarStatesEnum.DANGER,
