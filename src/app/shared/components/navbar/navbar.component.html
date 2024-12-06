@@ -1,12 +1,7 @@
 <nav class="navbar position-fixed fixed-top w-100">
   <mat-toolbar class="navbar__nav">
     <div class="d-flex align-items-center w-100 justify-content-between">
-      <button
-        class="navbar__nav-toggle"
-        *ngIf="!sidenav.opened"
-        mat-icon-button
-        (click)="sidenav.toggle()"
-      >
+      <button class="navbar__nav-toggle" *ngIf="!sidenav.opened" mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
 
@@ -15,51 +10,28 @@
       </a>
 
       <div class="d-flex align-items-center justify-content-center">
-        <a
-          mat-button
-          routerLink="./home"
-          id="navbar-home-lol"
-          class="navbar__nav-link text-decoration-none"
-          [matTooltip]="'HOME' | translate"
-        >
+        <a mat-button routerLink="./home" id="navbar-home-lol" class="navbar__nav-link text-decoration-none"
+          [matTooltip]="'HOME' | translate">
           <mat-icon>home</mat-icon>
         </a>
 
-        <a
-          mat-button
-          routerLink="./about"
-          class="navbar__nav-link text-decoration-none"
-          [matTooltip]="'ABOUT' | translate"
-        >
+        <a mat-button routerLink="./about" class="navbar__nav-link text-decoration-none"
+          [matTooltip]="'ABOUT' | translate">
           <mat-icon>person</mat-icon>
         </a>
 
-        <a
-          mat-button
-          href="https://github.com/edgarbenitez92/LeagueofLegends"
-          target="/blank"
-          class="navbar__nav-link"
-          [matTooltip]="'GITHUB' | translate"
-        >
+        <a mat-button href="https://github.com/edgarbenitez92/league-of-legends-app" target="/blank"
+          class="navbar__nav-link" [matTooltip]="'GITHUB' | translate">
           <img src="./assets/icons/github-brands.svg" alt="Logo Github" width="20px" />
         </a>
 
-        <a
-          mat-button
-          href="https://www.linkedin.com/in/edgar-benítez-valera-a191b0105"
-          target="/blank"
-          class="navbar__nav-link"
-          [matTooltip]="'LINKED_IN' | translate"
-        >
+        <a mat-button href="https://www.linkedin.com/in/edgar-benítez-valera-a191b0105" target="/blank"
+          class="navbar__nav-link" [matTooltip]="'LINKED_IN' | translate">
           <img src="./assets/icons/linkedin-brands.svg" alt="Logo LinkedIn" width="20px" />
         </a>
 
-        <a
-          mat-button
-          (click)="openAppSettingsDialog()"
-          class="navbar__nav-link text-decoration-none"
-          [matTooltip]="'SETTINGS' | translate"
-        >
+        <a mat-button (click)="openAppSettingsDialog()" class="navbar__nav-link text-decoration-none"
+          [matTooltip]="'SETTINGS' | translate">
           <mat-icon>settings</mat-icon>
         </a>
       </div>

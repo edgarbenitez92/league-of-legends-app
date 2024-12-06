@@ -1,6 +1,6 @@
 {
   "name": "LeagueOfLegends",
-  "short_name": "LeagueOfLegends",
+  "short_name": "LoL app",
   "theme_color": "#0477bf",
   "background_color": "#000000",
   "display": "standalone",

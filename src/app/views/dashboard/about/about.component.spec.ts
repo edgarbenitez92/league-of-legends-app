@@ -8,7 +8,7 @@ import { translateModuleConfig } from 'src/app/core/configs/translate-module.con
 import { AboutComponent } from './about.component';
 
 class FakeRouter {
-  navigate() {}
+  navigate() { }
 }
 
 fdescribe('AboutComponent', () => {
@@ -68,7 +68,7 @@ fdescribe('AboutComponent', () => {
   it('it should navigate to the repository route', () => {
     const githubNavigation: any = fixture.debugElement.queryAll(By.css('a'));
     const githubHrefAttr = githubNavigation[5].attributes['href'];
-    const githubPath = 'https://github.com/edgarbenitez92/LeagueofLegends';
+    const githubPath = 'https://github.com/edgarbenitez92/league-of-legends-app';
     const correctPath: boolean = githubHrefAttr.includes(githubPath);
     expect(correctPath).toBeTruthy();
   });
